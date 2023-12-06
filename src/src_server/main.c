@@ -6,7 +6,7 @@
 /*   By: rmakabe <rmkabe012@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 19:23:03 by rmakabe           #+#    #+#             */
-/*   Updated: 2023/12/02 12:55:43 by rmakabe          ###   ########.fr       */
+/*   Updated: 2023/12/03 16:20:36 by rmakabe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,12 @@ static int	write_receive_data(void);
 static void	send_error(char *mes);
 static char	restore_char();
 
-volatile sig_atomic_t	g_char_s = 0;
-
 int	main(void)
 {
 	struct sigaction	sa1;
 	struct sigaction	sa2;
 
+	g_char_s = 0;
 	ft_printf("server pid is %d\n", getpid());
 	memset(&act1, 0, sizeof(sigaction));
 	memset(&act2, 0, sizeof(sigaction));

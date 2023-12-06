@@ -1,22 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   signal_handler.c                                   :+:      :+:    :+:   */
+/*   ft_printf.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rmakabe <rmkabe012@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/20 19:07:17 by rmakabe           #+#    #+#             */
-/*   Updated: 2023/12/03 16:13:16 by rmakabe          ###   ########.fr       */
+/*   Created: 2022/11/11 23:40:38 by rmakabe           #+#    #+#             */
+/*   Updated: 2023/01/07 16:26:02 by rmakabe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "client.h"
+#ifndef FT_PRINTF_H
+# define FT_PRINTF_H
 
-void	signal_handler(int signum, siginfo_t *info, void *dummy)
-{
-	if (signum == SIGUSR1)
-		sig_pid = info->si_pid;
-	else
-		sig_pid = 0;
-	dummy = dummy;
-}
+# include <unistd.h>
+# include <limits.h>
+# include <stdarg.h>
+# include "libft.h"
+
+int	ft_printf(const char *fmt, ...);
+int	print_string(va_list *ap, char type);
+int	print_pointer(size_t num_ptr);
+int	print_decimal(long long num_int);
+int	print_hex(unsigned int num_hex, char letter);
+
+#endif

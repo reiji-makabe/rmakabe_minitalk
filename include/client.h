@@ -6,7 +6,7 @@
 /*   By: rmakabe <rmkabe012@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 19:53:52 by rmakabe           #+#    #+#             */
-/*   Updated: 2023/12/02 00:58:42 by rmakabe          ###   ########.fr       */
+/*   Updated: 2023/12/03 16:18:19 by rmakabe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+volatile sig_atomic_t	sig_pid;
 
 void	signal_handler(int signum, siginfo_t *info, void *dummy);
 

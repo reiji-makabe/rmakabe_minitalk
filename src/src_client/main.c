@@ -6,24 +6,25 @@
 /*   By: rmakabe <rmkabe012@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 19:25:09 by rmakabe           #+#    #+#             */
-/*   Updated: 2023/12/02 12:59:12 by rmakabe          ###   ########.fr       */
+/*   Updated: 2023/12/03 16:20:14 by rmakabe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "client.h"
+#include "libft.h"
 
 static int	check_pid_collect (char *pid);
-static void	send_str (int pid, char *str);
-static void	send_char (int pid, char *str);
+static int	send_str (int pid, char *str);
+static int	send_char (int pid, char c);
 static void	send_error(char *mes, int err);
-
-volatile sig_atomic_t	sig_pid = 0;
 
 int	main(int argc, char *argv[])
 {
 	int					pid;
 	struct sigaction	sa1;
 	struct sigaction	sa2;
+
+	sig_pid = 0;
 
 	if (argc != 3)
 		exit (1);
@@ -56,13 +57,19 @@ static int	check_pid_collect (char *pid)
 	return (re);
 }
 
-static void	send_str(int pid, char *str)
+static int	send_str(int pid, char *str)
 {
+	char	err;
+
 	while (*str)
 	{
-		send_char (pid, *str);
+		err = 0;
+		err = send_char (pid, *str);
+		if (err == 1)
+			return (1);
 		str++;
 	}
+	return (0);
 }
 
 static int	send_char(int pid, char c)
@@ -82,13 +89,14 @@ static int	send_char(int pid, char c)
 		if (error != 0)
 			send_error("pid is incollect or server not found\n", error);
 		usecond = 0;
-		while (usecond++ < 30000 || (sig_pid & IS_ERROR))
+		while (usecond++ < 30000 || (sig_pid != 0))
 			usleep(100);
 		if (sig_pid != 0 && sig_pid == pid)
 			sig_pid = 0;
 		else
 			return (1);
 	}
+	return (0);
 }
 
 static void	send_error(char *mes, int err)

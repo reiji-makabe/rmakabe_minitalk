@@ -6,7 +6,7 @@
 #    By: rmakabe <rmkabe012@gmail.com>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/12/01 12:33:03 by rmakabe           #+#    #+#              #
-#    Updated: 2023/12/02 00:57:50 by rmakabe          ###   ########.fr        #
+#    Updated: 2023/12/05 11:28:56 by rmakabe          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,26 +37,43 @@ SRC_CLI := $(wildcard $(SRC_DIR_CLI)*.c)
 OBJ_SER := $(addprefix $(OBJ_DIR_SER), $(notdir $(SRC_SER:.c=.o)))
 OBJ_CLI := $(addprefix $(OBJ_DIR_CLI), $(notdir $(SRC_CLI:.c=.o)))
 
+ARCHIVE_DIR := archive/
+LIB_DIR := 42_library/
+
+LIB := $(filter-out $(LIB_DIR)Makefile, $(wildcard $(LIB_DIR)*))
+ARCHIVE := $(addsuffix .a, $(subst $(LIB_DIR), $(ARCHIVE_DIR), $(LIB)))
+
 
 #command
+
 all: $(CLIENT) $(SERVER)
 
 $(CLIENT):$(OBJ_CLI)
-	$(CC) $(CFLAGS) $(INCLUDE) $^ -o $(NAME)
+	@mkdir -p $(ARCHIVE_DIR)
+	$(CC) $(CFLAGS) $(INCLUDE) $^ -o $(ARCHIVE) $(NAME)
 
 $(OBJ_DIR_CLI)%.o:$(SRC_DIR_CLI)%.c
 	@mkdir -p $(OBJ_DIR_CLI)
+	make -C $(LIB_DIR)
 	$(CC) $(CFLAGS) $(INCLUDE) -c $^ -o $@
 
 $(SERVER):$(OBJ_SER)
 	$(CC) $(CFLAGS) $(INCLUDE) $^ -o $(NAME)
 
-$(OBJ_DIR_SER)%.o:$(SRC_DIR_SER)%.c
+$(OBJ_DIR_SER)%.o:$(SRC_DIR_SER)%.c $(ARCHIVE)
 	@mkdir -p $(OBJ_DIR_SER)
-	$(CC) $(CFLAGS) $(INCLUDE) -c $^ -o $@
+	$(CC) $(CFLAGS) $(INCLUDE) -c $^ -o $@ $(ARCHIVE)
+
+$(ARCHIVE):
+	@mkdir -p $(ARCHIVE_DIR)
+ifdef WITH_DEBUG
+	make debug -C $(LIB_DIR)
+else
+	make -C $(LIB_DIR)
+endif
 
 clean:
-	$(RM) $(OBJ)
+	$(RM) $(OBJ_CLI) $(OBJ_SER) $(ARCHIVE)
 
 fclean:
 	$(RM) $(NAME) $(SERVER) $(CLIENT)
