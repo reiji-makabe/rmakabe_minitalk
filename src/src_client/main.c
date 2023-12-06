@@ -6,7 +6,7 @@
 /*   By: rmakabe <rmkabe012@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 19:25:09 by rmakabe           #+#    #+#             */
-/*   Updated: 2023/12/06 16:03:48 by rmakabe          ###   ########.fr       */
+/*   Updated: 2023/12/06 17:24:00 by rmakabe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ static int	send_char(int pid, char c)
 		if (error != 0)
 			send_error("pid is incollect or server not found\n", error);
 		usecond = 0;
-		while (usecond++ < 30000 || (g_sig_pid != 0))
+		while (usecond++ < 30000 && (g_sig_pid == 0))
 			usleep(100);
 		if (g_sig_pid != 0 && g_sig_pid == pid)
 			g_sig_pid = 0;
