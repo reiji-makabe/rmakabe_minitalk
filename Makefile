@@ -6,14 +6,14 @@
 #    By: rmakabe <rmkabe012@gmail.com>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/12/01 12:33:03 by rmakabe           #+#    #+#              #
-#    Updated: 2023/12/05 11:28:56 by rmakabe          ###   ########.fr        #
+#    Updated: 2023/12/06 16:15:09 by rmakabe          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-CLIENT := client.a
-SERVER := server.a
+CLIENT := client
+SERVER := server
 CC := cc
-SANITIZE :=-fsanitize=leak -fsanitize=address
+SANITIZE :=-fsanitize=address
 
 ifdef WITH_DEBUG
 	DEBUG :=-O0 -g3
@@ -46,23 +46,25 @@ ARCHIVE := $(addsuffix .a, $(subst $(LIB_DIR), $(ARCHIVE_DIR), $(LIB)))
 
 #command
 
-all: $(CLIENT) $(SERVER)
+all:$(CLIENT) $(SERVER)
 
 $(CLIENT):$(OBJ_CLI)
-	@mkdir -p $(ARCHIVE_DIR)
-	$(CC) $(CFLAGS) $(INCLUDE) $^ -o $(ARCHIVE) $(NAME)
+	$(CC) $(CFLAGS) $(INCLUDE) $^ -o $(CLIENT) $(ARCHIVE)
 
 $(OBJ_DIR_CLI)%.o:$(SRC_DIR_CLI)%.c
-	@mkdir -p $(OBJ_DIR_CLI)
+	@mkdir -p $(ARCHIVE_DIR)
 	make -C $(LIB_DIR)
+	@mkdir -p $(OBJ_DIR_CLI)
 	$(CC) $(CFLAGS) $(INCLUDE) -c $^ -o $@
 
 $(SERVER):$(OBJ_SER)
-	$(CC) $(CFLAGS) $(INCLUDE) $^ -o $(NAME)
+	$(CC) $(CFLAGS) $(INCLUDE) $^ -o $(SERVER) $(ARCHIVE)
 
-$(OBJ_DIR_SER)%.o:$(SRC_DIR_SER)%.c $(ARCHIVE)
+$(OBJ_DIR_SER)%.o:$(SRC_DIR_SER)%.c
+	@mkdir -p $(ARCHIVE_DIR)
+	make -C $(LIB_DIR)
 	@mkdir -p $(OBJ_DIR_SER)
-	$(CC) $(CFLAGS) $(INCLUDE) -c $^ -o $@ $(ARCHIVE)
+	$(CC) $(CFLAGS) $(INCLUDE) -c $^ -o $@
 
 $(ARCHIVE):
 	@mkdir -p $(ARCHIVE_DIR)
@@ -74,9 +76,11 @@ endif
 
 clean:
 	$(RM) $(OBJ_CLI) $(OBJ_SER) $(ARCHIVE)
+	make clean -C $(LIB_DIR)
 
-fclean:
+fclean: clean
 	$(RM) $(NAME) $(SERVER) $(CLIENT)
+	make fclean -C $(LIB_DIR)
 
 re: fclean all
 

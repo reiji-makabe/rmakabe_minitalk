@@ -6,7 +6,7 @@
 /*   By: rmakabe <rmkabe012@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 19:07:17 by rmakabe           #+#    #+#             */
-/*   Updated: 2023/12/03 16:13:16 by rmakabe          ###   ########.fr       */
+/*   Updated: 2023/12/06 16:03:58 by rmakabe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 void	signal_handler(int signum, siginfo_t *info, void *dummy)
 {
 	if (signum == SIGUSR1)
-		sig_pid = info->si_pid;
+		g_sig_pid = info->si_pid;
 	else
-		sig_pid = 0;
-	dummy = dummy;
+		g_sig_pid = 0;
+	dummy = NULL;
 }

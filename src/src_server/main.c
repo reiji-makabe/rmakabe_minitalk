@@ -6,11 +6,13 @@
 /*   By: rmakabe <rmkabe012@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 19:23:03 by rmakabe           #+#    #+#             */
-/*   Updated: 2023/12/03 16:20:36 by rmakabe          ###   ########.fr       */
+/*   Updated: 2023/12/06 16:12:58 by rmakabe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
+#include "libft.h"
+#include "ft_printf.h"
 
 static int	write_receive_data(void);
 static void	send_error(char *mes);
@@ -23,8 +25,8 @@ int	main(void)
 
 	g_char_s = 0;
 	ft_printf("server pid is %d\n", getpid());
-	memset(&act1, 0, sizeof(sigaction));
-	memset(&act2, 0, sizeof(sigaction));
+	memset(&sa1, 0, sizeof(sigaction));
+	memset(&sa2, 0, sizeof(sigaction));
 	sa1.sa_sigaction = signal_handler;
 	sa2.sa_sigaction = signal_handler;
 	sa1.sa_flags = SA_SIGINFO;
@@ -33,7 +35,7 @@ int	main(void)
 	sigaddset(&sa2.sa_mask, SIGUSR1);
 	sigaction(SIGUSR1, &sa1, NULL);
 	sigaction(SIGUSR2, &sa2, NULL);
-	if (write_receive_data)
+	if (write_receive_data())
 		send_error("Error\n");
 	exit(1);
 }
@@ -69,7 +71,7 @@ static void	send_error(char *mes)
 	}
 }
 
-static char	restore_char();
+static char	restore_char()
 {
 	int		digit;
 	int		usecond;
@@ -82,7 +84,7 @@ static char	restore_char();
 	{
 		g_char_s &= ~RECEIVE_CHAR;
 		re += g_char_s & CHAR_BIT_IS;
-		re << 1;
+		re = re << 1;
 		usecond = 0;
 		while ((usecond++ < 3000000) || (g_char_s & RECEIVE_CHAR))
 			usleep(1);

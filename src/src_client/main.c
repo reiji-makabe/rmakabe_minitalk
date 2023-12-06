@@ -6,7 +6,7 @@
 /*   By: rmakabe <rmkabe012@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 19:25:09 by rmakabe           #+#    #+#             */
-/*   Updated: 2023/12/03 16:20:14 by rmakabe          ###   ########.fr       */
+/*   Updated: 2023/12/06 16:03:48 by rmakabe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	main(int argc, char *argv[])
 	struct sigaction	sa1;
 	struct sigaction	sa2;
 
-	sig_pid = 0;
+	g_sig_pid = 0;
 
 	if (argc != 3)
 		exit (1);
@@ -89,10 +89,10 @@ static int	send_char(int pid, char c)
 		if (error != 0)
 			send_error("pid is incollect or server not found\n", error);
 		usecond = 0;
-		while (usecond++ < 30000 || (sig_pid != 0))
+		while (usecond++ < 30000 || (g_sig_pid != 0))
 			usleep(100);
-		if (sig_pid != 0 && sig_pid == pid)
-			sig_pid = 0;
+		if (g_sig_pid != 0 && g_sig_pid == pid)
+			g_sig_pid = 0;
 		else
 			return (1);
 	}
