@@ -6,7 +6,7 @@
 /*   By: rmakabe <rmkabe012@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 19:25:09 by rmakabe           #+#    #+#             */
-/*   Updated: 2023/12/06 17:24:00 by rmakabe          ###   ########.fr       */
+/*   Updated: 2023/12/06 20:40:20 by rmakabe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	main(int argc, char *argv[])
 	g_sig_pid = 0;
 
 	if (argc != 3)
-		exit (1);
+		usage();
 	pid = check_pid_collect(argv[1]);
 	if (pid == 0)
 		exit (1);
@@ -89,12 +89,14 @@ static int	send_char(int pid, char c)
 		if (error != 0)
 			send_error("pid is incollect or server not found\n", error);
 		usecond = 0;
+		g_sig_pid = 0;
 		while (usecond++ < 30000 && (g_sig_pid == 0))
 			usleep(100);
 		if (g_sig_pid != 0 && g_sig_pid == pid)
 			g_sig_pid = 0;
 		else
 			return (1);
+		printf("%d\n", digit);
 	}
 	return (0);
 }

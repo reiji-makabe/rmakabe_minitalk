@@ -6,7 +6,7 @@
 /*   By: rmakabe <rmkabe012@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 19:23:03 by rmakabe           #+#    #+#             */
-/*   Updated: 2023/12/06 16:12:58 by rmakabe          ###   ########.fr       */
+/*   Updated: 2023/12/06 20:43:59 by rmakabe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ static char	restore_char()
 	re = 0;
 	while ((digit < 7) && !(g_char_s & IS_ERROR))
 	{
+		printf("tst\n");
 		g_char_s &= ~RECEIVE_CHAR;
 		re += g_char_s & CHAR_BIT_IS;
 		re = re << 1;
