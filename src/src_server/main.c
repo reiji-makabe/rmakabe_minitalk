@@ -6,7 +6,7 @@
 /*   By: rmakabe <rmkabe012@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 19:23:03 by rmakabe           #+#    #+#             */
-/*   Updated: 2023/12/06 20:43:59 by rmakabe          ###   ########.fr       */
+/*   Updated: 2023/12/07 17:52:20 by rmakabe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 static int	write_receive_data(void);
 static void	send_error(char *mes);
 static char	restore_char();
+
+volatile sig_atomic_t	g_char_s = 0;
 
 int	main(void)
 {
@@ -66,7 +68,7 @@ static void	send_error(char *mes)
 {
 	while (*mes)
 	{
-		write (STDERR_FILENO, mes, 1);
+		write (STDOUT_FILENO, mes, 1);
 		mes++;
 	}
 }
@@ -82,18 +84,20 @@ static char	restore_char()
 	re = 0;
 	while ((digit < 7) && !(g_char_s & IS_ERROR))
 	{
-		printf("tst\n");
 		g_char_s &= ~RECEIVE_CHAR;
 		re += g_char_s & CHAR_BIT_IS;
 		re = re << 1;
 		usecond = 0;
-		while ((usecond++ < 3000000) || (g_char_s & RECEIVE_CHAR))
-			usleep(1);
-		if (usecond >= 3000000)
+		while ((usecond++ < 100000) && !(g_char_s & RECEIVE_CHAR))
+			usleep(3);
+//		printf("gs:0x%x\n", g_char_s);
+//		printf("usecond:%d\n", usecond);
+		if (usecond >= 100000)
 			g_char_s |= IS_ERROR;
 		digit++;
 	}
 	if (g_char_s & IS_ERROR)
 		re = 0;
+	write (STDOUT_FILENO, &re, 1);
 	return (re);
 }

@@ -6,7 +6,7 @@
 /*   By: rmakabe <rmkabe012@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 19:38:48 by rmakabe           #+#    #+#             */
-/*   Updated: 2023/12/06 16:11:28 by rmakabe          ###   ########.fr       */
+/*   Updated: 2023/12/07 10:35:16 by rmakabe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 #define RECEIVE_CHAR 0x40
 #define CHAR_BIT_IS 0x01
 
-volatile sig_atomic_t	g_char_s;
+extern volatile sig_atomic_t	g_char_s;
 
 void	signal_handler(int signum, siginfo_t *info, void *dummy);
 

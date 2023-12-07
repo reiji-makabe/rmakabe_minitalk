@@ -6,13 +6,14 @@
 #    By: rmakabe <rmkabe012@gmail.com>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/12/01 12:33:03 by rmakabe           #+#    #+#              #
-#    Updated: 2023/12/06 16:18:31 by rmakabe          ###   ########.fr        #
+#    Updated: 2023/12/07 10:25:24 by rmakabe          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
+# NAME is neccesarry!
 CLIENT := client
 SERVER := server
-CC := cc
+CC := gcc
 SANITIZE :=-fsanitize=address
 
 ifdef WITH_DEBUG
@@ -31,6 +32,7 @@ OBJ_DIR_SER := obj/obj_server/
 OBJ_DIR_CLI := obj/obj_client/
 
 CFLAGS := -Wall -Wextra -Werror $(DEBUG) $(SANITIZE) -I
+#CFLAGS :=$(DEBUG) $(SANITIZE) -I
 
 SRC_SER := $(wildcard $(SRC_DIR_SER)*.c)
 SRC_CLI := $(wildcard $(SRC_DIR_CLI)*.c)
