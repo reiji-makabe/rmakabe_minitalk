@@ -6,7 +6,7 @@
 /*   By: rmakabe <rmkabe012@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 19:23:03 by rmakabe           #+#    #+#             */
-/*   Updated: 2023/12/07 17:52:20 by rmakabe          ###   ########.fr       */
+/*   Updated: 2023/12/08 19:43:52 by rmakabe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,6 @@
 #include "ft_printf.h"
 
 static int	write_receive_data(void);
-static void	send_error(char *mes);
-static char	restore_char();
 
 volatile sig_atomic_t	g_char_s = 0;
 
@@ -37,67 +35,34 @@ int	main(void)
 	sigaddset(&sa2.sa_mask, SIGUSR1);
 	sigaction(SIGUSR1, &sa1, NULL);
 	sigaction(SIGUSR2, &sa2, NULL);
-	if (write_receive_data())
-		send_error("Error\n");
+	while (1)
+	{
+		pause();
+		if (write_receive_data())
+			ft_printf("Error\n");
+	}
 	exit(1);
 }
 
 int	write_receive_data(void)
 {
-	char	write_char;
+	int				usecond;
+	int				loop;
+	sig_atomic_t	pre_g;
 
-	while (1)
+	loop = 1;
+	while (loop)
 	{
-		pause();
-		g_char_s = 0;
-		while (!(g_char_s & IS_ERROR))
-		{
-			write_char = restore_char();
-			if (write_char == 0)
-				g_char_s |= IS_ERROR;
-			if (!(g_char_s & IS_ERROR))
-				write (STDOUT_FILENO, &write_char, 1);
-		}
-		if (g_char_s & IS_ERROR)
-			send_error("Connection has been lost\n");
-	}
-	return (1);
-}
-
-static void	send_error(char *mes)
-{
-	while (*mes)
-	{
-		write (STDOUT_FILENO, mes, 1);
-		mes++;
-	}
-}
-
-static char	restore_char()
-{
-	int		digit;
-	int		usecond;
-	char	re;
-
-
-	digit = 0;
-	re = 0;
-	while ((digit < 7) && !(g_char_s & IS_ERROR))
-	{
-		g_char_s &= ~RECEIVE_CHAR;
-		re += g_char_s & CHAR_BIT_IS;
-		re = re << 1;
+		pre_g = g_char_s;
 		usecond = 0;
-		while ((usecond++ < 100000) && !(g_char_s & RECEIVE_CHAR))
-			usleep(3);
-//		printf("gs:0x%x\n", g_char_s);
-//		printf("usecond:%d\n", usecond);
-		if (usecond >= 100000)
-			g_char_s |= IS_ERROR;
-		digit++;
+		while (usecond++ < 30000 && (pre_g == g_char_s))
+			usleep(100);
+		if (usecond >= 30000)
+		{
+			ft_printf("Connection has been lost\n");
+			loop = 0;
+			g_char_s = 0;
+		}
 	}
-	if (g_char_s & IS_ERROR)
-		re = 0;
-	write (STDOUT_FILENO, &re, 1);
-	return (re);
+	return (0);
 }

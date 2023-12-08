@@ -6,7 +6,7 @@
 /*   By: rmakabe <rmkabe012@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 19:25:09 by rmakabe           #+#    #+#             */
-/*   Updated: 2023/12/07 17:06:23 by rmakabe          ###   ########.fr       */
+/*   Updated: 2023/12/08 18:55:37 by rmakabe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,22 +78,14 @@ static int	send_char(int pid, char c)
 	int	digit;
 	int	usecond;
 	int	error;
-//0x01110100 t
-//0x011
+
 	digit = 7;
 	while (digit >= 0)
 	{
-		printf("%c ", c);
 		if (c & (1 << digit))
-		{
 			error = kill (pid, SIGUSR1);
-			printf("send 1\n");
-		}
 		else
-		{
 			error = kill (pid, SIGUSR2);
-			printf("send 0\n");
-		}
 		digit--;
 		if (error != 0)
 			send_error("pid is incollect or server not found\n", error);
@@ -101,8 +93,7 @@ static int	send_char(int pid, char c)
 		g_sig_pid = 0;
 		while (usecond++ < 30000 && (g_sig_pid == 0))
 			usleep(100);
-		printf("pid:%d\n", g_sig_pid);
-		if (g_sig_pid != 0 && g_sig_pid == pid)
+		if (g_sig_pid == pid)
 			g_sig_pid = 0;
 		else
 			return (1);
