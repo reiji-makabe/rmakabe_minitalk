@@ -6,7 +6,7 @@
 /*   By: rmakabe <rmkabe012@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 19:23:03 by rmakabe           #+#    #+#             */
-/*   Updated: 2023/12/09 19:01:10 by rmakabe          ###   ########.fr       */
+/*   Updated: 2023/12/12 20:28:09 by rmakabe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ int	main(void)
 	sigaction(SIGUSR2, &sa2, NULL);
 	while (1)
 	{
+		g_char_s = 0;
 		pause();
 		if (write_receive_data())
 			ft_printf("Error\n");
@@ -56,10 +57,13 @@ int	write_receive_data(void)
 		pre_g = g_char_s;
 		usecond = 0;
 		while (usecond++ < 30000 && (pre_g == g_char_s))
+		{
+
 			usleep(100);
+		}
 		if (usecond >= 30000)
 		{
-			ft_printf("Connection has been lost\n");
+			ft_printf("\nConnection has been lost\n");
 			loop = 0;
 			g_char_s = 0;
 		}
