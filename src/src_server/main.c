@@ -6,7 +6,7 @@
 /*   By: rmakabe <rmkabe012@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 19:23:03 by rmakabe           #+#    #+#             */
-/*   Updated: 2023/12/12 20:28:09 by rmakabe          ###   ########.fr       */
+/*   Updated: 2023/12/13 01:03:45 by rmakabe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,13 @@
 
 static int	write_receive_data(void);
 
-volatile sig_atomic_t	g_char_s = 0;
+volatile sig_atomic_t	g_sig_pid_s = 0;
 
 int	main(void)
 {
 	struct sigaction	sa1;
 	struct sigaction	sa2;
 
-	g_char_s = 0;
 	ft_printf("server pid is %d\n", getpid());
 	memset(&sa1, 0, sizeof(sigaction));
 	memset(&sa2, 0, sizeof(sigaction));
@@ -37,7 +36,6 @@ int	main(void)
 	sigaction(SIGUSR2, &sa2, NULL);
 	while (1)
 	{
-		g_char_s = 0;
 		pause();
 		if (write_receive_data())
 			ft_printf("Error\n");
@@ -47,31 +45,22 @@ int	main(void)
 
 int	write_receive_data(void)
 {
-	int				usecond;
-	int				loop;
-	sig_atomic_t	pre_g;
+	int	loop;
+	int	send;
 
 	loop = 1;
 	while (loop)
 	{
-		pre_g = g_char_s;
-		usecond = 0;
-		while (usecond++ < 30000 && (pre_g == g_char_s))
+		if (g_sig_pid_s == 1)
 		{
-
-			usleep(100);
-		}
-		if (usecond >= 30000)
-		{
-			ft_printf("\nConnection has been lost\n");
+			kill (send, SIGUSR1);
 			loop = 0;
-			g_char_s = 0;
+			break ;
 		}
-		if (g_char_s == 0xff)
-		{
-			loop = 0;
-			g_char_s = 0;
-		}
+		usleep(30);
+		send = g_sig_pid_s;
+		kill (g_sig_pid_s, SIGUSR1);
+		pause();
 	}
 	return (0);
 }

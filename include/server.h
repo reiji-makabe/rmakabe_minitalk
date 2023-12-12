@@ -6,7 +6,7 @@
 /*   By: rmakabe <rmkabe012@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 19:38:48 by rmakabe           #+#    #+#             */
-/*   Updated: 2023/12/09 19:14:50 by rmakabe          ###   ########.fr       */
+/*   Updated: 2023/12/13 01:01:56 by rmakabe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 # include <stdio.h>
 # include <stdlib.h>
 
-extern volatile sig_atomic_t	g_char_s;
+extern volatile sig_atomic_t	g_sig_pid_s;
 
 void	signal_handler(int signum, siginfo_t *info, void *dummy);
 

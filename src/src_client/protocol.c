@@ -6,7 +6,7 @@
 /*   By: rmakabe <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 14:34:47 by rmakabe           #+#    #+#             */
-/*   Updated: 2023/12/09 18:53:53 by rmakabe          ###   ########.fr       */
+/*   Updated: 2023/12/12 23:09:15 by rmakabe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,13 @@ int	end_com(int pid)
 	int	err;
 	int	usecond;
 
-	i = 8;
-	while (i--)
+	i = 0;
+	while (i++ < 8)
 	{
-		err = kill (pid, SIGUSR1);
+		if (i == 6)
+			err = kill (pid, SIGUSR1);
+		else
+			err = kill (pid, SIGUSR2);
 		if (err != 0)
 			send_error("pid is incollect or server not found\n", err);
 		usecond = 0;
