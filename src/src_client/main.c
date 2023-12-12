@@ -3,20 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rmakabe <rmkabe012@gmail.com>              +#+  +:+       +#+        */
+/*   By: rmakabe <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/19 19:25:09 by rmakabe           #+#    #+#             */
-/*   Updated: 2023/12/08 18:55:37 by rmakabe          ###   ########.fr       */
+/*   Created: 2023/12/09 19:22:52 by rmakabe           #+#    #+#             */
+/*   Updated: 2023/12/09 19:23:50 by rmakabe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "client.h"
 #include "libft.h"
 
-static int	check_pid_collect (char *pid);
-static int	send_str (int pid, char *str);
-static int	send_char (int pid, char c);
-static void	send_error(char *mes, int err);
+static int	check_pid_collect(char *pid);
+static int	send_str(int pid, char *str);
+static int	send_char(int pid, char c);
 
 volatile sig_atomic_t	g_sig_pid = 0;
 
@@ -45,15 +44,16 @@ int	main(int argc, char *argv[])
 		send_error("Server Error", 1);
 }
 
-static int	check_pid_collect (char *pid)
+static int	check_pid_collect(char *pid)
 {
 	int		re;
 	char	*tmp;
 
 	re = ft_atoi(pid);
 	tmp = ft_itoa(re);
-	if (ft_strlen(tmp) != ft_strlen(pid) || ft_strncmp(tmp, pid, ft_strlen(pid)))
-			return (0);
+	if (ft_strlen(tmp) != ft_strlen(pid)
+		|| ft_strncmp(tmp, pid, ft_strlen(pid)))
+		return (0);
 	free (tmp);
 	return (re);
 }
@@ -62,7 +62,8 @@ static int	send_str(int pid, char *str)
 {
 	char	err;
 
-	while (*str)
+	err = 0;
+	while (*str && !err)
 	{
 		err = 0;
 		err = send_char (pid, *str);
@@ -70,6 +71,7 @@ static int	send_str(int pid, char *str)
 			return (1);
 		str++;
 	}
+	err = end_com(pid);
 	return (0);
 }
 
@@ -101,7 +103,7 @@ static int	send_char(int pid, char c)
 	return (0);
 }
 
-static void	send_error(char *mes, int err)
+void	send_error(char *mes, int err)
 {
 	while (*mes)
 	{

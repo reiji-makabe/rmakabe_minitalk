@@ -6,7 +6,7 @@
 /*   By: rmakabe <rmkabe012@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 19:23:03 by rmakabe           #+#    #+#             */
-/*   Updated: 2023/12/08 19:43:52 by rmakabe          ###   ########.fr       */
+/*   Updated: 2023/12/09 19:01:10 by rmakabe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,11 @@ int	write_receive_data(void)
 		if (usecond >= 30000)
 		{
 			ft_printf("Connection has been lost\n");
+			loop = 0;
+			g_char_s = 0;
+		}
+		if (g_char_s == 0xff)
+		{
 			loop = 0;
 			g_char_s = 0;
 		}
